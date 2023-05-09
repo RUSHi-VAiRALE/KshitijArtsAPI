@@ -59,7 +59,8 @@ router.post("/updateCart/:id", verifyToken, async (req , res)=>{
     
 });
 
-router.get("/deleteCart/:idC/:idP", verifyToken, async (req , res)=>{
+router.delete("/deleteCart/:idC/:idP", verifyToken, async (req , res)=>{
+    console.log(req.params)
         try {
             const nice = await Cart.updateOne({_id:req.params.idC},{$pull:{products:{_id:req.params.idP}}})
             console.log(nice)
