@@ -20,7 +20,7 @@ router.post("/register", async (req , res) => {
     });
     try {
         const ok = await newUser.save();
-        ok.cartId.userId = ok._id
+        ok.cartId.userId = ok._id;
         ok.cartId.save();
         res.status(201).json(ok);
         console.log(ok);

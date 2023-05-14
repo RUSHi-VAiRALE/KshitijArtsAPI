@@ -15,6 +15,8 @@ router.post("/cart/:id", verifyToken, async (req , res)=>{
                 $push :{
                     products:{
                 productId : req.body._id,
+                proURL : req.body.imgURL,
+                proPrice : req.body.price,
                 proName : req.body.name,
                 proDisc : req.body.discription}
                 }
@@ -41,11 +43,14 @@ router.get("/allCart/:id", verifyToken, async (req , res)=>{
 
 router.post("/updateCart/:id", verifyToken, async (req , res)=>{
         try {
+            console.log(req.body)
             const updateCart = await Cart.findByIdAndUpdate(req.params.id,
                 {
                     $push:{
                         products:{
                             productId:req.body._id,
+                            proURL : req.body.imgURL,
+                            proPrice : req.body.price,
                             proDisc : req.body.discription,
                             proName : req.body.name
                         }
