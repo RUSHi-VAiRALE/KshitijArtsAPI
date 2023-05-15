@@ -21,4 +21,25 @@ instance.orders.create(options, function(err, order) {
 });
 })
 
+router.post("/verify",(req,res)=>{
+    console.log(req.body)
+    let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
+
+    let crypto = require("crypto");
+    let expectedSignature = crypto.createHmac('sha256', process.env.RAZ_SECRET)
+                                .update(body.toString())
+                                .digest('hex');
+                                console.log("sig received " ,req.body.response.razorpay_signature);
+                                console.log("sig generated " ,expectedSignature);
+let response = {"signatureIsValid":"false"}
+    if(expectedSignature === req.body.response.razorpay_signature)
+    {
+        res.status(200).json("Sign Valid")
+    }
+    else{
+        console.log("im in this")
+        res.status(500).json("sign Invalid")
+    }
+})
+
 module.exports = router;
