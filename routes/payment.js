@@ -1,7 +1,12 @@
 require("dotenv").config();
 const Razorpay  = require("razorpay");
+require("dotenv").config();
 const router = require("express").Router();
-
+const Cart = require("../models/cart");
+const jwt = require("jsonwebtoken");
+const {verifyToken, verifyandAdmin} = require("./verifyToken");
+const mongoose = require("mongoose");
+const { functions } = require("lodash");
 
 router.post("/orders",(req,res)=>{
 let instance = new Razorpay({ key_id: process.env.RAZ_ID, key_secret: process.env.RAZ_SECRET })
@@ -21,8 +26,9 @@ instance.orders.create(options, function(err, order) {
 });
 })
 
-router.post("/verify",(req,res)=>{
+router.post("/verify/:ID", async (req,res)=>{
     console.log(req.body)
+    console.log(req.params.ID)
     let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
 
     let crypto = require("crypto");
@@ -34,7 +40,33 @@ router.post("/verify",(req,res)=>{
 let response = {"signatureIsValid":"false"}
     if(expectedSignature === req.body.response.razorpay_signature)
     {
-        res.status(200).json("Sign Valid")
+        try {
+            const updateOrder = await Cart.findByIdAndUpdate(req.params.ID,
+                {
+                    $push:{
+                        orders:{
+                            pId:req.body.proInfo.pId,
+
+                            pName : req.body.proInfo.pName,
+
+                            pImg : req.body.proInfo.pImg,
+
+                            pPrice : req.body.proInfo.pPrice,
+
+                            raz_pay_id : req.body.response.razorpay_payment_id,
+
+                            raz_order_id : req.body.response.razorpay_order_id,
+
+                            raz_signature : req.body.response.razorpay_signature
+                        }
+                    }
+                });
+                console.log(updateOrder)
+                res.status(200).json("Sign Valid")
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
     else{
         console.log("im in this")

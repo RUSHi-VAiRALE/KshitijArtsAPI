@@ -25,8 +25,31 @@ const CartSchema = new mongoose.Schema(
                 type:String,
             }
         }
-        ]
-        
+        ],
+        orders : [{
+            pId : {
+                type:String
+            },
+            pImg : {
+                type : String
+            },
+            pName : {
+                type : String
+            },
+            pPrice :{
+                type : Number
+            },
+            raz_pay_id :{
+                type : String
+            },
+            raz_order_id : {
+                type : String
+            },
+            raz_signature : {
+                type : String
+            }
+        }
+        ],
 },
 {timestamps : true}
 );
