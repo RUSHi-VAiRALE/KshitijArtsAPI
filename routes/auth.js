@@ -31,6 +31,7 @@ router.post("/register", async (req , res) => {
 });
 
 router.post("/login", (req , res) => {
+    console.log(req)
     try {
         User.findOne({username : req.body.userName},(err, user) => {
         if (err) {
