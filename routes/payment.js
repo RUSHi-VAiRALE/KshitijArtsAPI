@@ -9,12 +9,21 @@ const mongoose = require("mongoose");
 const { functions } = require("lodash");
 
 router.post("/orders",(req,res)=>{
+
 let instance = new Razorpay({ key_id: process.env.RAZ_ID, key_secret: process.env.RAZ_SECRET })
-const amt = req.body.amount;
-const amt1 = amt.split(" ")[1] * req.body.quantity;
-console.log(amt1)
+let amt =Number(req.body.amount);
+console.log(amt)
+if (req.body.quantity) {
+    const amt1 = Number(amt) * req.body.quantity;
+    amt = amt1
+} else {
+    const amt1 = Number(amt);
+    amt = amt1
+}
+
+console.log(amt)
 let options = {
-    amount: Number(amt1 * 100),  // amount in the smallest currency unit
+    amount: Number(amt * 100),  // amount in the smallest currency unit
     currency: "INR",
 };
 instance.orders.create(options, function(err, order) {
@@ -40,7 +49,44 @@ router.post("/verify/:ID", async (req,res)=>{
 let response = {"signatureIsValid":"false"}
     if(expectedSignature === req.body.response.razorpay_signature)
     {
-        try {
+        let result = Array.isArray(req.body.proInfo)
+        if (result) {
+            console.log("\n\n\n\n\nfirst\n\n\n\n\n\n")
+            tempArray = req.body.proInfo;
+            tempArray.forEach(async element => {
+                try {
+            const updateOrder = await Cart.findByIdAndUpdate(req.params.ID,
+                {
+                    $push:{
+                        orders:{
+                            pId:element.productId,
+
+                            pName : element.proName,
+
+                            pImg : "",
+
+                            pPrice : element.proPrice,
+
+                            pQuantity : element.quantity,
+
+                            raz_pay_id : req.body.response.razorpay_payment_id,
+
+                            raz_order_id : req.body.response.razorpay_order_id,
+
+                            raz_signature : req.body.response.razorpay_signature
+                        }
+                    }
+                });
+                console.log(updateOrder)
+                
+        } catch (error) {
+            console.log(error)
+        }
+            });
+            res.status(200).json("Sign Valid")
+        } else {
+            console.log("\n\n\n\nsecond\n\n\n")
+            try {
             const updateOrder = await Cart.findByIdAndUpdate(req.params.ID,
                 {
                     $push:{
@@ -52,6 +98,8 @@ let response = {"signatureIsValid":"false"}
                             pImg : req.body.proInfo.pImg,
 
                             pPrice : req.body.proInfo.pPrice,
+
+                            pQuantity : req.body.proInfo.pQuant,
 
                             raz_pay_id : req.body.response.razorpay_payment_id,
 
@@ -66,7 +114,7 @@ let response = {"signatureIsValid":"false"}
         } catch (error) {
             console.log(error)
         }
-        
+        }
     }
     else{
         console.log("im in this")

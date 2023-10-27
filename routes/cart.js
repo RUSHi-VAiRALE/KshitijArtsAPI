@@ -64,6 +64,36 @@ router.post("/updateCart/:id", verifyToken, async (req , res)=>{
     
 });
 
+router.post("/incqty/:id/:ind",async(req, res)=>{
+    console.log("im also in");
+    try {
+        const updateQty = await Cart.findByIdAndUpdate(req.params.id,{
+            $inc:{
+                [`products.${req.params.ind}.quantity`]:1
+            }
+        });
+        console.log(updateQty)
+        res.status(200).send("ok");
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.post("/decqty/:id/:ind",async(req, res)=>{
+    console.log("im also in");
+    try {
+        const updateQty = await Cart.findByIdAndUpdate(req.params.id,{
+            $inc:{
+                [`products.${req.params.ind}.quantity`]:-1
+            }
+        });
+        console.log(updateQty)
+        res.status(200).send("ok");
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 router.delete("/deleteCart/:idC/:idP", verifyToken, async (req , res)=>{
     console.log(req.params)
         try {

@@ -19,7 +19,7 @@ const CartSchema = new mongoose.Schema(
                 default: 1
             },
             proPrice:{
-                type:String,
+                type:Number,
             },
             proURL:{
                 type:String,
@@ -37,6 +37,9 @@ const CartSchema = new mongoose.Schema(
                 type : String
             },
             pPrice :{
+                type : Number
+            },
+            pQuantity:{
                 type : Number
             },
             raz_pay_id :{
