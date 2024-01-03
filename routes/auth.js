@@ -34,22 +34,22 @@ router.post("/login", (req, res) => {
     // console.log(req)
     try {
         User.findOne({ username: req.body.userName }, (err, user) => {
-            if (err) {
-                res.status(500).send(err);
-            }
-            else {
+            if(user) {
                 if (user.password === req.body.password) {
                     const accessToken = jwt.sign({ id: user.id, username: user.username, isAdmin: user.isAdmin }, process.env.TOK);
                     res.status(201).send({ id: user.id, username: user.username, isAdmin: user.isAdmin, firstName: user.firstName, cartid: user.cartId._id, accessToken: accessToken });
                     console.log(user);
                 }
                 else {
-                    res.status(500).json("invalid credentials");
+                    res.status(500).json("invalid");
                 }
+            }
+            else{
+                res.status(500).send("not ok")
             }
         });
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).send("a not olk");
     }
 });
 
