@@ -105,5 +105,16 @@ router.delete("/deleteCart/:idC/:idP", verifyToken, async (req , res)=>{
         }
 });
 
+router.delete("/deleteCartProd/:cartId",verifyToken, async(req,res)=>{
+    try {
+        const delCart = await Cart.updateOne({
+            _id : req.params.cartId
+        },{$set:{products:[],},});
+        console.log(delCart)
+        res.status(200).send("cart has been deleted");
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 module.exports = router
