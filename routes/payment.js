@@ -28,7 +28,8 @@ let options = {
 };
 instance.orders.create(options, function(err, order) {
     if (err) {
-        res.status(500).json("server error");
+         console.log("dsksd")
+        res.status(500).send(err)
     } else {
         res.status(200).json(order);
     }
