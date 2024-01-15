@@ -10,7 +10,7 @@ const { functions } = require("lodash");
 
 router.post("/orders",(req,res)=>{
 
-let instance = new Razorpay({ key_id: `${{env.monday}}`, key_secret: `${{env.tuesday}}` })
+let instance = new Razorpay({ key_id: ${{env.monday}}, key_secret: ${{env.tuesday}} })
 let amt =Number(req.body.amount);
 console.log(amt)
 if (req.body.quantity) {
@@ -42,7 +42,7 @@ router.post("/verify/:ID", async (req,res)=>{
     let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
 
     let crypto = require("crypto");
-    let expectedSignature = crypto.createHmac('sha256', `${{env.tuesday}}`)
+    let expectedSignature = crypto.createHmac('sha256', ${{env.tuesday}})
                                 .update(body.toString())
                                 .digest('hex');
                                 console.log("sig received " ,req.body.response.razorpay_signature);

@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
-mongoose.connect(`${{env.URL}}`);
+mongoose.connect(${{env.URL}});
 
 app.use(cors());
 app.get("/",(req,res)=>{
