@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
-mongoose.connect("mongodb+srv://rushivairale:hMhBAmtpe6MXrk4w@cluster0.mi0lpr7.mongodb.net/kshitijArtsDB?retryWrites=true&w=majority");
+mongoose.connect(process.env.URL);
 
 app.use(cors());
 app.get("/",(req,res)=>{
