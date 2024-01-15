@@ -6,7 +6,7 @@ const verifyToken = (req, res, next)=>{
     const authHeader = req.headers.authorization;
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-        jwt.verify(token, ${env.friday},(err,user)=>{
+        jwt.verify(token, process.env.TOK,(err,user)=>{
             if (err) {
                 res.send("Token is not valid");
             } else {
