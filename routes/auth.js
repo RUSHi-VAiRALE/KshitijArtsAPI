@@ -36,7 +36,7 @@ router.post("/login", (req, res) => {
         User.findOne({ username: req.body.userName }, (err, user) => {
             if(user) {
                 if (user.password === req.body.password) {
-                    const accessToken = jwt.sign({ id: user.id, username: user.username, isAdmin: user.isAdmin }, ${{env.friday}});
+                    const accessToken = jwt.sign({ id: user.id, username: user.username, isAdmin: user.isAdmin }, ${env.friday});
                     res.status(201).send({ id: user.id, username: user.username, isAdmin: user.isAdmin, firstName: user.firstName, cartid: user.cartId._id, accessToken: accessToken });
                     console.log(user);
                 }
