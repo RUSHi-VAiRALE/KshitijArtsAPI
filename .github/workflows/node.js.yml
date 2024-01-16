@@ -10,22 +10,12 @@ on:
   push:
     branches: [ "master" ]
 
-jobs:
+jobs:    
   build:
-
-    runs-on: self-hosted
-
-    env:
-      monday: ${{secrets.RAZ_ID}}
-      tuesday : ${{secrets.RAZ_SECRET}}
-      friday : ${{secrets.TOK}}
-      URL : ${{secrets.URL}}
-
+    runs-on: [self-hosted]
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -33,6 +23,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - name: Set up .env
+      run: |
+          echo "TOK = ${{ secrets.TOK }}" > .env
+          echo "RAZ_ID = ${{ secrets.RAZ_ID }}" >> .env
+          echo "RAZ_SECRET = ${{ secrets.RAZ_SECRET }}" >> .env
+          echo "URL = ${{ secrets.URL }}" >> .env
+
     - run: npm install --force
     - run: npm run build --if-present
     - run: pm2 restart all
